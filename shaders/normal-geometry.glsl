@@ -40,13 +40,20 @@ void main(){
 
 	vec3 T = normalize(vec3(data_in[0].model * vec4(tangent,0.0f)));
 	vec3 B = normalize(vec3(data_in[0].model * vec4(biTangent,0.0f)));
-	vec3 N = normalize(vec3(vec4(cross(edge1,edge0),0.0f)));
-	
-	mat3 TBN = mat3(T,B,N);
-	TBN = transpose(TBN);
+	vec3 N;
+	mat3 TBN;
 
 	
 	gl_Position = data_in[0].CameraMatrix * (gl_in[0].gl_Position);
+	N = normalize(data_in[0].Normal);
+	T = normalize(T - N * dot(N, T));
+	
+	if (dot(cross(N, T), B) < 0.0f){
+     T = T * -1.0f;
+	}
+
+	TBN = mat3(T,B,N);
+	TBN = transpose(TBN);
 	CurrentPosition = TBN * data_in[0].CurrentPosition.xyz;
 	Normal = data_in[0].Normal;
 	Color = data_in[0].Color;
@@ -57,6 +64,13 @@ void main(){
 	EmitVertex();
 
 	gl_Position = data_in[1].CameraMatrix * (gl_in[1].gl_Position);
+	N = normalize(data_in[1].Normal);
+	T = normalize(T - N * dot(N, T));
+	if (dot(cross(N, T), B) < 0.0f){
+     T = T * -1.0f;
+	}
+	TBN = mat3(T,B,N);
+	TBN = transpose(TBN);
 	CurrentPosition = TBN * data_in[1].CurrentPosition.xyz;
 	Normal = data_in[1].Normal;
 	Color = data_in[1].Color;
@@ -68,6 +82,13 @@ void main(){
 
 	
 	gl_Position = data_in[2].CameraMatrix * (gl_in[2].gl_Position);
+	N = normalize(data_in[2].Normal);
+	T = normalize(T - N * dot(N, T));
+	if (dot(cross(N, T), B) < 0.0f){
+     T = T * -1.0f;
+	}
+	TBN = mat3(T,B,N);
+	TBN = transpose(TBN);
 	CurrentPosition = TBN * data_in[2].CurrentPosition.xyz;
 	Normal = data_in[2].Normal;
 	Color = data_in[2].Color;

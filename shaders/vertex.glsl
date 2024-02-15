@@ -15,6 +15,7 @@ uniform mat4 model;
 uniform mat4 lightProjection;
 uniform float T;
 
+uniform sampler2D normal0;
 uniform vec4 lightColor;
 uniform vec3 lightPosition;
 uniform vec3 CameraPosition;

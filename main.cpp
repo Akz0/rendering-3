@@ -79,11 +79,7 @@ int main() {
 
 	Shader NormalShaderProgram("./shaders/vertex.glsl", "./shaders/normal-fragment.glsl", "./shaders/normal-geometry.glsl");
 
-	/*
-	Shader FresnalRefractionShaderProgram("./shaders/vertex.glsl", "./shaders/fresnal-fragment.glsl", "./shaders/explode-geometry.glsl");
 	
-	Shader ChromaticDispersionShaderProgram("./shaders/vertex.glsl", "./shaders/chromatic-fragment.glsl", "./shaders/explode-geometry.glsl");
-	*/
 
 	Shader SkyboxShaderProgram("./shaders/skybox-vertex.glsl", "./shaders/skybox-fragment.glsl");
 
@@ -94,25 +90,6 @@ int main() {
 			Texture("./textures/specular_map.jpg", "specular", 1, GL_R, GL_UNSIGNED_BYTE),
 			Texture("./textures/normal_map.jpg", "normal", 2, GL_RGB, GL_UNSIGNED_BYTE)
 		},
-		/*
-		{
-			Texture("./textures/diffuse_map.jpg", "diffuse", 0, GL_RGB, GL_UNSIGNED_BYTE),
-			Texture("./textures/specular_map.jpg", "specular", 1, GL_R, GL_UNSIGNED_BYTE),
-			Texture("./textures/normal_map.jpg", "normal", 2, GL_RGB, GL_UNSIGNED_BYTE)
-		},
-
-		{
-			Texture("./textures/diffuse_map.jpg", "diffuse", 0, GL_RGB, GL_UNSIGNED_BYTE),
-			Texture("./textures/specular_map.jpg", "specular", 1, GL_R, GL_UNSIGNED_BYTE),
-			Texture("./textures/normal_map.jpg", "normal", 2, GL_RGB, GL_UNSIGNED_BYTE)
-		},
-
-		{
-			Texture("./textures/diffuse_map.jpg", "diffuse", 0, GL_RGB, GL_UNSIGNED_BYTE),
-			Texture("./textures/specular_map.jpg", "specular", 1, GL_R, GL_UNSIGNED_BYTE),
-			Texture("./textures/normal_map.jpg", "normal", 2, GL_RGB, GL_UNSIGNED_BYTE)
-		},
-		*/
 	};
 
 	//Main Light
@@ -136,16 +113,8 @@ int main() {
 	SpecularShaderProgram.Activate();
 	glUniform1i(glGetUniformLocation(SpecularShaderProgram.ID, "skybox"), 0);
 
-	/*
-	RefractionShaderProgram.Activate();
-	glUniform1i(glGetUniformLocation(RefractionShaderProgram.ID, "skybox"), 0);
-
-	FresnalRefractionShaderProgram.Activate();
-	glUniform1i(glGetUniformLocation(FresnalRefractionShaderProgram.ID, "skybox"), 0);
-
-	ChromaticDispersionShaderProgram.Activate();
-	glUniform1i(glGetUniformLocation(ChromaticDispersionShaderProgram.ID, "skybox"), 0);
-	*/
+	NormalShaderProgram.Activate();
+	glUniform1i(glGetUniformLocation(NormalShaderProgram.ID, "skybox"), 0);
 
 	Model Light("./models/ball.obj", Textures);
 	Light.model = lightModel;
@@ -181,26 +150,6 @@ int main() {
 	Normal_model = glm::scale(Normal_model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.7f);
 	Normal.model = Normal_model;
 	Normal.UpdateLight(NormalShaderProgram, lightColor, lightPosition);
-
-	/*
-	std::cout << "\nFesnal Refract: " << std::endl;
-	Model Fresnal(modelName, Textures);
-	glm::vec3 FresnalPosition = glm::vec3(5.0f, 0.0f, 0.0f);
-	glm::mat4 Fresnal_model = glm::mat4(1.0f);
-	Fresnal_model = glm::translate(Fresnal_model, FresnalPosition);
-	Fresnal_model = glm::scale(Fresnal_model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.7f);
-	Fresnal.model = Fresnal_model;
-	Fresnal.UpdateLight(FresnalRefractionShaderProgram, lightColor, lightPosition);
-
-	std::cout << "\nChromatic Dispersion: " << std::endl;
-	Model Chromatic(modelName, Textures);
-	glm::vec3 ChromaticPosition = glm::vec3(10.0f, 0.0f, 0.0f);
-	glm::mat4 Chromatic_model = glm::mat4(1.0f);
-	Chromatic_model = glm::translate(Chromatic_model, ChromaticPosition);
-	Chromatic_model = glm::scale(Chromatic_model, glm::vec3(1.0f, 1.0f, 1.0f) * 0.7f);
-	Chromatic.model = Chromatic_model;
-	Chromatic.UpdateLight(ChromaticDispersionShaderProgram, lightColor, lightPosition);
-	*/
 
 	// Skybox
 	unsigned int skyboxVAO, skyboxVBO, skyboxEBO;
@@ -266,13 +215,10 @@ int main() {
 
 		camera.Inputs(window);
 		camera.UpdateMatrix(45.0f, 0.1f, 1000.0f);
-		/*
 		Basic.model = glm::rotate(Basic.model, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Specular.model = glm::rotate(Specular.model, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Normal.model = glm::rotate(Normal.model, glm::radians(0.5f), glm::vec3(0.0f, 1.0f, 0.0f));
-		Fresnal.model = glm::rotate(Fresnal.model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		Chromatic.model = glm::rotate(Chromatic.model, glm::radians(1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		*/
+		
 		Basic.UpdateCamera(BasicProgram, camera);
 		Basic.UpdateLight(BasicProgram, lightColor, lightPosition);
 		
@@ -282,13 +228,7 @@ int main() {
 		Normal.UpdateCamera(NormalShaderProgram, camera);
 		Normal.UpdateLight(NormalShaderProgram, lightColor, lightPosition);
 
-		/*
-		Fresnal.UpdateCamera(FresnalRefractionShaderProgram, camera);
-		Fresnal.UpdateLight(FresnalRefractionShaderProgram, lightColor, lightPosition);
-
-		Chromatic.UpdateCamera(ChromaticDispersionShaderProgram, camera);
-		Chromatic.UpdateLight(ChromaticDispersionShaderProgram, lightColor, lightPosition);
-		*/
+		
 
 		lightShader.Activate();
 		camera.Matrix(lightShader, "CameraMatrix");
@@ -298,10 +238,7 @@ int main() {
 		Normal.Draw(NormalShaderProgram, camera);
 
 		Light.Draw(lightShader, camera);
-		/*
-		Fresnal.Draw(FresnalRefractionShaderProgram, camera);
-		Chromatic.Draw(ChromaticDispersionShaderProgram, camera);
-		*/
+		
 
 		//Skybox
 		glDepthFunc(GL_LEQUAL);
